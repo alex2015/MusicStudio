@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using MusicStudio.Models;
 using Player;
 
 namespace MusicStudio
@@ -49,33 +50,39 @@ namespace MusicStudio
             {
                 foreach (string pathfilename in openFileDialog.FileNames)
                 {
-                    var fileName = System.IO.Path.GetFileName(pathfilename);
-                    playList.Items.Add(fileName);
+                    playList.Items.Add(new ListBoxItemModel
+                    {
+                        Value = pathfilename,
+                        DisplayValue = System.IO.Path.GetFileName(pathfilename)
+                    });
 
-                    Vars.Files.Add(fileName);
+                    //var fileName = System.IO.Path.GetFileName(pathfilename);
+                    //playList.Items.Add(fileName);
+
+                    Vars.Files.Add(pathfilename);
                 }
             }
         }
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            var q1 = playList.SelectedItems;
-            var q2 = playList.SelectedIndex;
-            var q3 = playList.SelectedItem;
+            //var q1 = playList.SelectedItems;
+            //var q2 = playList.SelectedIndex;
+            //var q3 = playList.SelectedItem;
 
-            var q4 = playList.SelectedValue;
-            var q5 = playList.SelectedValuePath;
+            //var q4 = playList.SelectedValue;
+            //var q5 = playList.SelectedValuePath;
 
 
 
             //player = new PlayerWrapper(playList.SelectedItem.ToString(), PlayerWrapper.UriType.Common | PlayerWrapper.UriType.LocalFile);
             //player.Play();
 
+            var selectItem = (ListBoxItemModel) playList.SelectedItem;
 
-
-            if (playList.SelectedItem != null && !string.IsNullOrWhiteSpace(playList.SelectedItem.ToString()))
+            if (selectItem != null && !string.IsNullOrWhiteSpace(selectItem.Value))
             {
-                BassLike.Play(playList.SelectedItem.ToString(), BassLike.Volume);
+                BassLike.Play(selectItem.Value, BassLike.Volume);
                 lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
                 lblLength.Content = TimeSpan.FromSeconds(BassLike.GetTimeOfStream(BassLike.Stream)).ToString();
 
