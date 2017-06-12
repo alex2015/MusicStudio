@@ -11,8 +11,8 @@
         <Button x:Name="btnPlay" Content="Play" HorizontalAlignment="Left" Margin="23,288,0,0" VerticalAlignment="Top" Width="75" Click="btnPlay_Click"/>
         <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Left" Margin="150,288,0,0" VerticalAlignment="Top" Width="75" Click="btnPause_Click"/>
         <Button x:Name="btnOpenFileDialog" Content="Добавить файлы" HorizontalAlignment="Left" Margin="23,23,0,0" VerticalAlignment="Top" Width="108" Click="btnOpenFileDialog_Click"/>
-        <Slider x:Name="slTime" HorizontalAlignment="Left" Margin="23,261,0,0" VerticalAlignment="Top" Width="116" Value="0" />
-        <Slider x:Name="slVol" HorizontalAlignment="Left" Margin="261,261,0,0" VerticalAlignment="Top" Width="75" Value="100"/>
+        <Slider x:Name="slTime" HorizontalAlignment="Left" Margin="23,261,0,0" VerticalAlignment="Top" Width="116" Value="0" PreviewMouseUp="SlTime_OnPreviewMouseUp"/>
+        <Slider x:Name="slVol" HorizontalAlignment="Left" Margin="261,261,0,0" VerticalAlignment="Top" Width="75" Value="100" PreviewMouseUp="SlVol_OnPreviewMouseUp"/>
         <Label x:Name="lblCurrent" Content="00:00:00" HorizontalAlignment="Left" Margin="23,230,0,0" VerticalAlignment="Top" Width="75"/>
         <Label x:Name="lblLength" Content="00:00:00" HorizontalAlignment="Left" Margin="139,230,0,0" VerticalAlignment="Top" Width="58"/>
 

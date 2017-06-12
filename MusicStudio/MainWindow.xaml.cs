@@ -31,11 +31,14 @@ namespace MusicStudio
         public MainWindow()
         {
             InitializeComponent();
+            InitTimer();
+        }
 
+        private void InitTimer()
+        {
             timer = new DispatcherTimer();
-            timer.Tick += new EventHandler(Target);
+            timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
-            timer.Start();
         }
 
         private void btnOpenFileDialog_Click(object sender, RoutedEventArgs e)
@@ -56,9 +59,6 @@ namespace MusicStudio
                         DisplayValue = System.IO.Path.GetFileName(pathfilename)
                     });
 
-                    //var fileName = System.IO.Path.GetFileName(pathfilename);
-                    //playList.Items.Add(fileName);
-
                     Vars.Files.Add(pathfilename);
                 }
             }
@@ -66,15 +66,6 @@ namespace MusicStudio
 
         private void btnPlay_Click(object sender, RoutedEventArgs e)
         {
-            //var q1 = playList.SelectedItems;
-            //var q2 = playList.SelectedIndex;
-            //var q3 = playList.SelectedItem;
-
-            //var q4 = playList.SelectedValue;
-            //var q5 = playList.SelectedValuePath;
-
-
-
             //player = new PlayerWrapper(playList.SelectedItem.ToString(), PlayerWrapper.UriType.Common | PlayerWrapper.UriType.LocalFile);
             //player.Play();
 
@@ -91,36 +82,31 @@ namespace MusicStudio
 
                 timer.Start();
             }
-
         }
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
             //player.Pause();
-
-
             BassLike.Stop();
             timer.Stop();
             slTime.Value = 0;
             lblCurrent.Content = "00:00:00";
         }
 
-        private void Target(object sender, EventArgs eventArgs)
+        private void Timer_Tick(object sender, EventArgs eventArgs)
         {
             lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
             slTime.Value = BassLike.GetPosOfStream(BassLike.Stream);
         }
 
-        private void TimerSliderScroll()
+        private void SlTime_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            // вместо 10 вписать позицию слайдера
-            BassLike.SetPosOfScroll(BassLike.Stream, 10);
+            BassLike.SetPosOfScroll(BassLike.Stream, Convert.ToInt32(((Slider) e.Source).Value));
         }
 
-        private void VolumeSliderScroll()
+        private void SlVol_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            // вместо 10 вписать позицию слайдера
-            BassLike.SetVolumeStream(BassLike.Stream, 10);
+            BassLike.SetVolumeStream(BassLike.Stream, Convert.ToInt32(((Slider) e.Source).Value));
         }
     }
 }
