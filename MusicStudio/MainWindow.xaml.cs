@@ -86,6 +86,11 @@ namespace MusicStudio
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
+            BassLike.Pause();
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
             //player.Pause();
             BassLike.Stop();
             timer.Stop();

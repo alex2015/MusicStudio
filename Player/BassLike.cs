@@ -47,18 +47,25 @@ namespace Player
         /// <param name="vol"></param>
         public static void Play(string fileName, int vol)
         {
-            Stop();
-
-            if (InitBass(HZ))
+            if (Bass.BASS_ChannelIsActive(Stream) != BASSActive.BASS_ACTIVE_PAUSED)
             {
-                Stream = Bass.BASS_StreamCreateFile(fileName, 0, 0, BASSFlag.BASS_DEFAULT);
+                Stop();
 
-                if (Stream != 0)
+                if (InitBass(HZ))
                 {
-                    Volume = vol;
-                    Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100);
-                    Bass.BASS_ChannelPlay(Stream, false);
+                    Stream = Bass.BASS_StreamCreateFile(fileName, 0, 0, BASSFlag.BASS_DEFAULT);
+
+                    if (Stream != 0)
+                    {
+                        Volume = vol;
+                        Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100F);
+                        Bass.BASS_ChannelPlay(Stream, false);
+                    }
                 }
+            }
+            else
+            {
+                Bass.BASS_ChannelPlay(Stream, false);
             }
         }
 
@@ -69,6 +76,17 @@ namespace Player
         {
             Bass.BASS_ChannelStop(Stream);
             Bass.BASS_StreamFree(Stream);
+        }
+
+        /// <summary>
+        /// Пауза
+        /// </summary>
+        public static void Pause()
+        {
+            if (Bass.BASS_ChannelIsActive(Stream) == BASSActive.BASS_ACTIVE_PLAYING)
+            {
+                Bass.BASS_ChannelPause(Stream);
+            }
         }
 
         /// <summary>
