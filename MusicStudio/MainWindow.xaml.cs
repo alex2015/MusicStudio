@@ -54,11 +54,7 @@ namespace MusicStudio
             {
                 foreach (string pathfilename in openFileDialog.FileNames)
                 {
-                    playList.Items.Add(new ListBoxItemModel
-                    {
-                        Value = pathfilename,
-                        DisplayValue = System.IO.Path.GetFileName(pathfilename)
-                    });
+                    playList.Items.Add(new TagModel(pathfilename));
                 }
             }
         }
@@ -68,11 +64,11 @@ namespace MusicStudio
             //player = new PlayerWrapper(playList.SelectedItem.ToString(), PlayerWrapper.UriType.Common | PlayerWrapper.UriType.LocalFile);
             //player.Play();
 
-            var selectItem = (ListBoxItemModel) playList.SelectedItem;
+            var selectItem = (TagModel) playList.SelectedItem;
 
-            if (selectItem != null && !string.IsNullOrWhiteSpace(selectItem.Value))
+            if (selectItem != null && !string.IsNullOrWhiteSpace(selectItem.PathFileName))
             {
-                BassLike.Play(selectItem.Value, BassLike.Volume);
+                BassLike.Play(selectItem.PathFileName, BassLike.Volume);
                 lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
                 lblLength.Content = TimeSpan.FromSeconds(BassLike.GetTimeOfStream(BassLike.Stream)).ToString();
 
