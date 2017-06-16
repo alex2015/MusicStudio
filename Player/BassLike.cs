@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Un4seen.Bass;
 
 namespace Player
@@ -8,7 +9,7 @@ namespace Player
         /// <summary>
         /// Частота дискретизации
         /// </summary>
-        private static int HZ = 44100;
+        public static int HZ = 44100;
 
         /// <summary>
         /// Состояние инициализации
@@ -25,6 +26,8 @@ namespace Player
         /// </summary>
         public static int Volume = 100;
 
+        private static readonly List<int> BassPluginsHandles = new List<int>();
+
         /// <summary>
         /// Инициализация Bass.dll
         /// </summary>
@@ -35,6 +38,12 @@ namespace Player
             if (!InitDefaultDevice)
             {
                 InitDefaultDevice = Bass.BASS_Init(-1, hz, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+                if (InitDefaultDevice)
+                {
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(Vars.AppPath + @"\plugins\bass_aac.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(Vars.AppPath + @"\plugins\bassflac.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(Vars.AppPath + @"\plugins\basswma.dll"));
+                }
             }
 
             return InitDefaultDevice;

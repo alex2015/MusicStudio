@@ -31,6 +31,7 @@ namespace MusicStudio
         public MainWindow()
         {
             InitializeComponent();
+            BassLike.InitBass(BassLike.HZ);
             InitTimer();
         }
 
@@ -58,8 +59,6 @@ namespace MusicStudio
                         Value = pathfilename,
                         DisplayValue = System.IO.Path.GetFileName(pathfilename)
                     });
-
-                    Vars.Files.Add(pathfilename);
                 }
             }
         }
