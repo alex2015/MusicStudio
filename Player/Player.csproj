@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Vars.cs" />
     <Compile Include="BassLike.cs" />
     <Compile Include="PlayerWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +52,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TagModel.cs" />
+    <Compile Include="Vars.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE.rtf" />

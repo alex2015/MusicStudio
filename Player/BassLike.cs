@@ -26,7 +26,13 @@ namespace Player
         /// </summary>
         public static int Volume = 100;
 
+        private static bool isStopped = true;
+
+        public static bool EndPlaylist;
+
         private static readonly List<int> BassPluginsHandles = new List<int>();
+
+        private static string appPath = AppDomain.CurrentDomain.BaseDirectory;
 
         /// <summary>
         /// Инициализация Bass.dll
@@ -40,9 +46,9 @@ namespace Player
                 InitDefaultDevice = Bass.BASS_Init(-1, hz, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
                 if (InitDefaultDevice)
                 {
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(Vars.AppPath + @"\plugins\bass_aac.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(Vars.AppPath + @"\plugins\bassflac.dll"));
-                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(Vars.AppPath + @"\plugins\basswma.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(appPath + @"\plugins\bass_aac.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(appPath + @"\plugins\bassflac.dll"));
+                    BassPluginsHandles.Add(Bass.BASS_PluginLoad(appPath + @"\plugins\basswma.dll"));
                 }
             }
 
@@ -76,6 +82,8 @@ namespace Player
             {
                 Bass.BASS_ChannelPlay(Stream, false);
             }
+
+            isStopped = false;
         }
 
         /// <summary>
@@ -85,6 +93,7 @@ namespace Player
         {
             Bass.BASS_ChannelStop(Stream);
             Bass.BASS_StreamFree(Stream);
+            isStopped = true;
         }
 
         /// <summary>
@@ -136,6 +145,26 @@ namespace Player
         {
             Volume = vol;
             Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100F);
+        }
+
+        public static bool ToNextTrack(bool notEndTrack)
+        {
+            if (Bass.BASS_ChannelIsActive(Stream) == BASSActive.BASS_ACTIVE_STOPPED && !isStopped)
+            {
+                // если текущий трек не последний
+                if (notEndTrack)
+                {
+                    Play(Vars.filesInfo[++Vars.currentTrackNumber].PathFileName, Volume);
+
+                    EndPlaylist = false;
+
+                    return true;
+                }
+
+                EndPlaylist = true;
+            }
+
+            return false;
         }
     }
 }

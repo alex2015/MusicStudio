@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
-using MusicStudio.Models;
 using Player;
 
 namespace MusicStudio
@@ -54,7 +43,13 @@ namespace MusicStudio
             {
                 foreach (string pathfilename in openFileDialog.FileNames)
                 {
-                    playList.Items.Add(new TagModel(pathfilename));
+                    var tm = new TagModel(pathfilename);
+
+                    if (Vars.filesInfo.All(i => i.PathFileName != pathfilename))
+                    {
+                        Vars.filesInfo.Add(tm);
+                        playList.Items.Add(tm);
+                    }
                 }
             }
         }
@@ -68,6 +63,8 @@ namespace MusicStudio
 
             if (selectItem != null && !string.IsNullOrWhiteSpace(selectItem.PathFileName))
             {
+                Vars.currentTrackNumber = playList.SelectedIndex;
+
                 BassLike.Play(selectItem.PathFileName, BassLike.Volume);
                 lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
                 lblLength.Content = TimeSpan.FromSeconds(BassLike.GetTimeOfStream(BassLike.Stream)).ToString();
@@ -97,6 +94,23 @@ namespace MusicStudio
         {
             lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
             slTime.Value = BassLike.GetPosOfStream(BassLike.Stream);
+
+            if (BassLike.ToNextTrack(Vars.filesInfo.Count > Vars.currentTrackNumber + 1))
+            {
+                playList.SelectedIndex = Vars.currentTrackNumber;
+                lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
+                lblLength.Content = TimeSpan.FromSeconds(BassLike.GetTimeOfStream(BassLike.Stream)).ToString();
+
+                slTime.Maximum = BassLike.GetTimeOfStream(BassLike.Stream);
+                slTime.Value = BassLike.GetPosOfStream(BassLike.Stream);
+            }
+
+            if (BassLike.EndPlaylist)
+            {
+                btnStop_Click(this, new RoutedEventArgs());
+                playList.SelectedIndex = Vars.currentTrackNumber = 0;
+                BassLike.EndPlaylist = false;
+            }
         }
 
         private void SlTime_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)

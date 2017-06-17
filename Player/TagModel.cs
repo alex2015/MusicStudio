@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Un4seen.Bass.AddOn.Tags;
 
-namespace MusicStudio.Models
+namespace Player
 {
-    internal class TagModel
+    public class TagModel
     {
         public string PathFileName { get; set; }
 
