@@ -5,17 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicStudio"
         mc:Ignorable="d"
-        Title="Misuc Studio" Height="350" Width="525">
+        Title="Misuc Studio" Height="405" Width="530" ResizeMode="CanMinimize">
     <Grid>
-        <ListBox x:Name="playList" HorizontalAlignment="Left" Height="158" Margin="23,56,0,0" VerticalAlignment="Top" Width="313" MouseDoubleClick="btnPlay_Click"/>
-        <Button x:Name="btnPlay" Content="Play" HorizontalAlignment="Left" Margin="23,288,0,0" VerticalAlignment="Top" Width="75" Click="btnPlay_Click"/>
-        <Button x:Name="btnStop" Content="Stop" HorizontalAlignment="Left" Margin="247,288,0,0" VerticalAlignment="Top" Width="75" Click="btnStop_Click"/>
-        <Button x:Name="btnOpenFileDialog" Content="Добавить файлы" HorizontalAlignment="Left" Margin="23,23,0,0" VerticalAlignment="Top" Width="108" Click="btnOpenFileDialog_Click"/>
-        <Slider x:Name="slTime" HorizontalAlignment="Left" Margin="23,261,0,0" VerticalAlignment="Top" Width="116" Value="0" PreviewMouseUp="SlTime_OnPreviewMouseUp"/>
-        <Slider x:Name="slVol" HorizontalAlignment="Left" Margin="261,261,0,0" VerticalAlignment="Top" Width="75" Value="100" PreviewMouseUp="SlVol_OnPreviewMouseUp"/>
-        <Label x:Name="lblCurrent" Content="00:00:00" HorizontalAlignment="Left" Margin="23,230,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label x:Name="lblLength" Content="00:00:00" HorizontalAlignment="Left" Margin="139,230,0,0" VerticalAlignment="Top" Width="58"/>
-        <Button x:Name="btnPause" Content="Pause" HorizontalAlignment="Left" Margin="139,288,0,0" VerticalAlignment="Top" Width="75" Click="btnPause_Click"/>
+        <ListBox x:Name="playList" HorizontalAlignment="Left" Height="158" Margin="23,56,0,0" VerticalAlignment="Top" Width="469" MouseDoubleClick="btnPlay_Click"/>
+        <Button x:Name="btnPlay" ToolTip="Воспроизвести" HorizontalAlignment="Left" Margin="107,327,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnPlay_Click">
+            <Image Source="Images/Play.png" Height="24" Width="24"></Image>
+        </Button>
+        <Button x:Name="btnPause" ToolTip="Пауза" HorizontalAlignment="Left" Margin="223,327,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnPause_Click">
+            <Image Source="Images/Pause.png" Height="24" Width="24"></Image>
+        </Button>
+        <Button x:Name="btnStop" ToolTip="Стоп" HorizontalAlignment="Left" Margin="331,327,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnStop_Click">
+            <Image Source="Images/Stop.png" Height="24" Width="24"></Image>
+        </Button>
+        <Button x:Name="btnOpenFileDialog" Content="Добавить файлы" HorizontalAlignment="Left" Margin="23,20,0,0" VerticalAlignment="Top" Width="108" Click="btnOpenFileDialog_Click"/>
+        <Slider x:Name="slTime" HorizontalAlignment="Left" Margin="28,294,0,0" VerticalAlignment="Top" Width="464" Value="0" PreviewMouseUp="SlTime_OnPreviewMouseUp"/>
+        <Slider x:Name="slVol" HorizontalAlignment="Left" Margin="414,236,0,0" VerticalAlignment="Top" Width="74" Value="100" PreviewMouseUp="SlVol_OnPreviewMouseUp"/>
+        <Label x:Name="lblCurrent" Content="00:00:00" HorizontalAlignment="Left" Margin="28,262,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label x:Name="lblLength" Content="00:00:00" HorizontalAlignment="Left" Margin="434,262,0,0" VerticalAlignment="Top" Width="58"/>
+        <Image x:Name="volume" HorizontalAlignment="Left" Height="24" Margin="384,230,0,0" VerticalAlignment="Top" Width="24" RenderTransformOrigin="0.167,-0.235" Source="Images/Volume.png"/>
 
     </Grid>
 </Window>

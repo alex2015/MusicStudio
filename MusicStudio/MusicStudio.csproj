@@ -122,6 +122,10 @@
     <Content Include="bass.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\Volume.png" />
+    <Resource Include="Images\Pause.png" />
+    <Resource Include="Images\Play.png" />
+    <Resource Include="Images\Stop.png" />
     <Content Include="Plugins\bassflac.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
