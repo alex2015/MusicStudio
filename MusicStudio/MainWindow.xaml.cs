@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,16 +42,7 @@ namespace MusicStudio
 
             if (openFileDialog.ShowDialog() == true)
             {
-                foreach (string pathfilename in openFileDialog.FileNames)
-                {
-                    var tm = new TagModel(pathfilename);
-
-                    if (Vars.filesInfo.All(i => i.PathFileName != pathfilename))
-                    {
-                        Vars.filesInfo.Add(tm);
-                        playList.Items.Add(tm);
-                    }
-                }
+                parseFilePaths(openFileDialog.FileNames);
             }
         }
 
@@ -121,6 +113,25 @@ namespace MusicStudio
         private void SlVol_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             BassLike.SetVolumeStream(BassLike.Stream, Convert.ToInt32(((Slider) e.Source).Value));
+        }
+
+        private void PlayList_OnDrop(object sender, DragEventArgs e)
+        {
+            parseFilePaths((string[])e.Data.GetData(DataFormats.FileDrop));
+        }
+
+        private void parseFilePaths(IEnumerable<string> pathfileNames)
+        {
+            foreach (string pathfilename in pathfileNames)
+            {
+                var tm = new TagModel(pathfilename);
+
+                if (Vars.filesInfo.All(i => i.PathFileName != pathfilename))
+                {
+                    Vars.filesInfo.Add(tm);
+                    playList.Items.Add(tm);
+                }
+            }
         }
     }
 }
