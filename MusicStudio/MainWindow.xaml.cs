@@ -137,5 +137,10 @@ namespace MusicStudio
             slTime.Maximum = timeLengthStream;
             slTime.Value = currentPosStream;
         }
+
+        private void TextBoxSearch_OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            playList.Items.Filter = i => ((TagModel) i).ToString().ToUpperInvariant().Contains(((TextBox) e.Source).Text.ToUpperInvariant());
+        }
     }
 }

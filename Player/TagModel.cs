@@ -16,6 +16,8 @@ namespace Player
         public string Title { get; set; }
         public string Year { get; set; }
 
+        public string DisplayText { get; set; }
+
         private Dictionary<int, string> ChannelsDict = new Dictionary<int, string>
         {
             {0, "Null"},
@@ -39,11 +41,12 @@ namespace Player
 
             Year = tagInfo.year;
 
+            DisplayText = string.Format("{0} - {1}", Artist, Title);
         }
 
         public override string ToString()
         {
-            return string.Format("{0} - {1}", Artist, Title);
+            return DisplayText;
         }
     }
 }
