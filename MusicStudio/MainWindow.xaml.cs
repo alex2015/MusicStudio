@@ -58,11 +58,7 @@ namespace MusicStudio
                 Vars.currentTrackNumber = playList.SelectedIndex;
 
                 BassLike.Play(selectItem.PathFileName, BassLike.Volume);
-                lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
-                lblLength.Content = TimeSpan.FromSeconds(BassLike.GetTimeOfStream(BassLike.Stream)).ToString();
-
-                slTime.Maximum = BassLike.GetTimeOfStream(BassLike.Stream);
-                slTime.Value = BassLike.GetPosOfStream(BassLike.Stream);
+                setTimeSteamInfo();
 
                 timer.Start();
             }
@@ -90,11 +86,7 @@ namespace MusicStudio
             if (BassLike.ToNextTrack(Vars.filesInfo.Count > Vars.currentTrackNumber + 1))
             {
                 playList.SelectedIndex = Vars.currentTrackNumber;
-                lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
-                lblLength.Content = TimeSpan.FromSeconds(BassLike.GetTimeOfStream(BassLike.Stream)).ToString();
-
-                slTime.Maximum = BassLike.GetTimeOfStream(BassLike.Stream);
-                slTime.Value = BassLike.GetPosOfStream(BassLike.Stream);
+                setTimeSteamInfo();
             }
 
             if (BassLike.EndPlaylist)
@@ -132,6 +124,18 @@ namespace MusicStudio
                     playList.Items.Add(tm);
                 }
             }
+        }
+
+        private void setTimeSteamInfo()
+        {
+            var currentPosStream = BassLike.GetPosOfStream(BassLike.Stream);
+            var timeLengthStream = BassLike.GetTimeOfStream(BassLike.Stream);
+
+            lblCurrent.Content = TimeSpan.FromSeconds(currentPosStream).ToString();
+            lblLength.Content = TimeSpan.FromSeconds(timeLengthStream).ToString();
+
+            slTime.Maximum = timeLengthStream;
+            slTime.Value = currentPosStream;
         }
     }
 }
