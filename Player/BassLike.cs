@@ -9,7 +9,7 @@ namespace Player
         /// <summary>
         /// Частота дискретизации
         /// </summary>
-        public static int HZ = 44100;
+        private static int HZ = 44100;
 
         /// <summary>
         /// Состояние инициализации
@@ -19,12 +19,12 @@ namespace Player
         /// <summary>
         /// Канал
         /// </summary>
-        public static int Stream;
+        private static int Stream;
 
         /// <summary>
         /// Громкость
         /// </summary>
-        public static int Volume = 100;
+        private static int Volume = 100;
 
         private static bool isStopped = true;
 
@@ -37,13 +37,12 @@ namespace Player
         /// <summary>
         /// Инициализация Bass.dll
         /// </summary>
-        /// <param name="hz"></param>
         /// <returns></returns>
-        public static bool InitBass(int hz)
+        public static bool InitBass()
         {
             if (!InitDefaultDevice)
             {
-                InitDefaultDevice = Bass.BASS_Init(-1, hz, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
+                InitDefaultDevice = Bass.BASS_Init(-1, HZ, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero);
                 if (InitDefaultDevice)
                 {
                     BassPluginsHandles.Add(Bass.BASS_PluginLoad(appPath + @"\plugins\bass_aac.dll"));
@@ -59,20 +58,18 @@ namespace Player
         /// Воспроизведение
         /// </summary>
         /// <param name="fileName"></param>
-        /// <param name="vol"></param>
-        public static void Play(string fileName, int vol)
+        public static void Play(string fileName)
         {
             if (Bass.BASS_ChannelIsActive(Stream) != BASSActive.BASS_ACTIVE_PAUSED)
             {
                 Stop();
 
-                if (InitBass(HZ))
+                if (InitBass())
                 {
                     Stream = Bass.BASS_StreamCreateFile(fileName, 0, 0, BASSFlag.BASS_DEFAULT);
 
                     if (Stream != 0)
                     {
-                        Volume = vol;
                         Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100F);
                         Bass.BASS_ChannelPlay(Stream, false);
                     }
@@ -110,41 +107,38 @@ namespace Player
         /// <summary>
         /// Получение длительности канала в секундах
         /// </summary>
-        /// <param name="stream"></param>
         /// <returns></returns>
-        public static int GetTimeOfStream(int stream)
+        public static int GetTimeOfStream()
         {
-            long TimeBytes = Bass.BASS_ChannelGetLength(stream);
-            double Time = Bass.BASS_ChannelBytes2Seconds(stream, TimeBytes);
+            long TimeBytes = Bass.BASS_ChannelGetLength(Stream);
+            double Time = Bass.BASS_ChannelBytes2Seconds(Stream, TimeBytes);
             return (int) Time;
         }
 
         /// <summary>
         /// Получение текущей позиции в секундах
         /// </summary>
-        /// <param name="stream"></param>
         /// <returns></returns>
-        public static int GetPosOfStream(int stream)
+        public static int GetPosOfStream()
         {
-            long pos = Bass.BASS_ChannelGetPosition(stream);
-            int posSec = (int) Bass.BASS_ChannelBytes2Seconds(stream, pos);
+            long pos = Bass.BASS_ChannelGetPosition(Stream);
+            int posSec = (int) Bass.BASS_ChannelBytes2Seconds(Stream, pos);
             return posSec;
         }
 
-        public static void SetPosOfScroll(int stream, int pos)
+        public static void SetPosOfScroll(int pos)
         {
-            Bass.BASS_ChannelSetPosition(stream, (double) pos);
+            Bass.BASS_ChannelSetPosition(Stream, (double) pos);
         }
 
         /// <summary>
         /// Установка громкости
         /// </summary>
-        /// <param name="stream"></param>
         /// <param name="vol"></param>
-        public static void SetVolumeStream(int stream, int vol)
+        public static void SetVolumeStream(int vol)
         {
             Volume = vol;
-            Bass.BASS_ChannelSetAttribute(stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100F);
+            Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100F);
         }
 
         public static bool ToNextTrack(bool notEndTrack)
@@ -154,7 +148,7 @@ namespace Player
                 // если текущий трек не последний
                 if (notEndTrack)
                 {
-                    Play(Vars.filesInfo[++Vars.currentTrackNumber].PathFileName, Volume);
+                    Play(Vars.filesInfo[++Vars.currentTrackNumber].PathFileName);
 
                     EndPlaylist = false;
 

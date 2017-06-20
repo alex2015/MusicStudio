@@ -21,7 +21,7 @@ namespace MusicStudio
         public MainWindow()
         {
             InitializeComponent();
-            BassLike.InitBass(BassLike.HZ);
+            BassLike.InitBass();
             InitTimer();
         }
 
@@ -57,7 +57,7 @@ namespace MusicStudio
             {
                 Vars.currentTrackNumber = playList.SelectedIndex;
 
-                BassLike.Play(selectItem.PathFileName, BassLike.Volume);
+                BassLike.Play(selectItem.PathFileName);
                 setTimeSteamInfo();
 
                 timer.Start();
@@ -80,8 +80,8 @@ namespace MusicStudio
 
         private void Timer_Tick(object sender, EventArgs eventArgs)
         {
-            lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream(BassLike.Stream)).ToString();
-            slTime.Value = BassLike.GetPosOfStream(BassLike.Stream);
+            lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream()).ToString();
+            slTime.Value = BassLike.GetPosOfStream();
 
             if (BassLike.ToNextTrack(Vars.filesInfo.Count > Vars.currentTrackNumber + 1))
             {
@@ -99,12 +99,12 @@ namespace MusicStudio
 
         private void SlTime_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            BassLike.SetPosOfScroll(BassLike.Stream, Convert.ToInt32(((Slider) e.Source).Value));
+            BassLike.SetPosOfScroll(Convert.ToInt32(((Slider) e.Source).Value));
         }
 
         private void SlVol_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            BassLike.SetVolumeStream(BassLike.Stream, Convert.ToInt32(((Slider) e.Source).Value));
+            BassLike.SetVolumeStream(Convert.ToInt32(((Slider) e.Source).Value));
         }
 
         private void PlayList_OnDrop(object sender, DragEventArgs e)
@@ -128,8 +128,8 @@ namespace MusicStudio
 
         private void setTimeSteamInfo()
         {
-            var currentPosStream = BassLike.GetPosOfStream(BassLike.Stream);
-            var timeLengthStream = BassLike.GetTimeOfStream(BassLike.Stream);
+            var currentPosStream = BassLike.GetPosOfStream();
+            var timeLengthStream = BassLike.GetTimeOfStream();
 
             lblCurrent.Content = TimeSpan.FromSeconds(currentPosStream).ToString();
             lblLength.Content = TimeSpan.FromSeconds(timeLengthStream).ToString();
