@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -32,7 +33,7 @@ namespace MusicStudio
             timer.Interval = new TimeSpan(0, 0, 1);
         }
 
-        private void btnOpenFileDialog_Click(object sender, RoutedEventArgs e)
+        private async void btnOpenFileDialog_Click(object sender, RoutedEventArgs e)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -42,7 +43,8 @@ namespace MusicStudio
 
             if (openFileDialog.ShowDialog() == true)
             {
-                parseFilePaths(openFileDialog.FileNames);
+                await Task.Run(() => parseFilePaths(openFileDialog.FileNames));
+                playList.ItemsSource = Vars.filesInfo;
             }
         }
 
@@ -107,9 +109,10 @@ namespace MusicStudio
             BassLike.SetVolumeStream(Convert.ToInt32(((Slider) e.Source).Value));
         }
 
-        private void PlayList_OnDrop(object sender, DragEventArgs e)
+        private async void PlayList_OnDrop(object sender, DragEventArgs e)
         {
-            parseFilePaths((string[])e.Data.GetData(DataFormats.FileDrop));
+            await Task.Run(() => parseFilePaths((string[]) e.Data.GetData(DataFormats.FileDrop)));
+            playList.ItemsSource = Vars.filesInfo;
         }
 
         private void parseFilePaths(IEnumerable<string> pathfileNames)
@@ -121,7 +124,6 @@ namespace MusicStudio
                 if (Vars.filesInfo.All(i => i.PathFileName != pathfilename))
                 {
                     Vars.filesInfo.Add(tm);
-                    playList.Items.Add(tm);
                 }
             }
         }
