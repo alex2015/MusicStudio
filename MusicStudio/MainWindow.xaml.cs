@@ -119,11 +119,9 @@ namespace MusicStudio
         {
             foreach (string pathfilename in pathfileNames)
             {
-                var tm = new TagModel(pathfilename);
-
                 if (Vars.filesInfo.All(i => i.PathFileName != pathfilename))
                 {
-                    Vars.filesInfo.Add(tm);
+                    Vars.filesInfo.Add(new TagModel(pathfilename));
                 }
             }
         }
