@@ -115,15 +115,14 @@ namespace MusicStudio
             playList.ItemsSource = Vars.filesInfo;
         }
 
-        private void parseFilePaths(IEnumerable<string> pathfileNames)
+        private void parseFilePaths(string[] pathfileNames)
         {
-            foreach (string pathfilename in pathfileNames)
-            {
-                if (Vars.filesInfo.All(i => i.PathFileName != pathfilename))
-                {
-                    Vars.filesInfo.Add(new TagModel(pathfilename));
-                }
-            }
+            Vars.filesInfo.AddRange(
+                pathfileNames.AsParallel()
+                    .WithMergeOptions(ParallelMergeOptions.FullyBuffered)
+                    .WithDegreeOfParallelism(Math.Max(1, pathfileNames.Length / 100))
+                    .Where(x => Vars.filesInfo.All(i => i.PathFileName != x))
+                    .Select(x => new TagModel(x)));
         }
 
         private void setTimeSteamInfo()
