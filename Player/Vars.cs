@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Player
 {
@@ -7,6 +8,6 @@ namespace Player
     {
         public static int currentTrackNumber;
 
-        public static List<TagModel> filesInfo = new List<TagModel>();
+        public static ObservableCollection<TagModel> filesInfo = new ObservableCollection<TagModel>();
     }
 }

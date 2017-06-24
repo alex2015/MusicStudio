@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +23,7 @@ namespace MusicStudio
             InitializeComponent();
             BassLike.InitBass();
             InitTimer();
+            initVars();
         }
 
         private void InitTimer()
@@ -31,6 +31,16 @@ namespace MusicStudio
             timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 1);
+        }
+
+        private void initVars()
+        {
+            playList.ItemsSource = Vars.filesInfo;
+
+            Vars.filesInfo.CollectionChanged += (o, args) =>
+            {
+                playList.Items.Refresh();
+            };
         }
 
         private async void btnOpenFileDialog_Click(object sender, RoutedEventArgs e)
@@ -44,7 +54,6 @@ namespace MusicStudio
             if (openFileDialog.ShowDialog() == true)
             {
                 await Task.Run(() => parseFilePaths(openFileDialog.FileNames));
-                playList.ItemsSource = Vars.filesInfo;
             }
         }
 
@@ -112,17 +121,22 @@ namespace MusicStudio
         private async void PlayList_OnDrop(object sender, DragEventArgs e)
         {
             await Task.Run(() => parseFilePaths((string[]) e.Data.GetData(DataFormats.FileDrop)));
-            playList.ItemsSource = Vars.filesInfo;
         }
 
         private void parseFilePaths(string[] pathfileNames)
         {
-            Vars.filesInfo.AddRange(
-                pathfileNames.AsParallel()
-                    .WithMergeOptions(ParallelMergeOptions.FullyBuffered)
-                    .WithDegreeOfParallelism(Math.Max(1, pathfileNames.Length / 100))
-                    .Where(x => Vars.filesInfo.All(i => i.PathFileName != x))
-                    .Select(x => new TagModel(x)));
+            foreach (var pathfileName in pathfileNames)
+            {
+                if (Vars.filesInfo.All(i => i.PathFileName != pathfileName))
+                {
+                    var tm = new TagModel(pathfileName);
+
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Vars.filesInfo.Add(tm);
+                    });
+                }
+            }
         }
 
         private void setTimeSteamInfo()
