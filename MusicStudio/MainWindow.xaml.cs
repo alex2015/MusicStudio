@@ -23,7 +23,7 @@ namespace MusicStudio
             InitializeComponent();
             BassLike.InitBass();
             InitTimer();
-            initVars();
+            ItemsControl();
         }
 
         private void InitTimer()
@@ -33,14 +33,9 @@ namespace MusicStudio
             timer.Interval = new TimeSpan(0, 0, 1);
         }
 
-        private void initVars()
+        private void ItemsControl()
         {
             playList.ItemsSource = Vars.filesInfo;
-
-            Vars.filesInfo.CollectionChanged += (o, args) =>
-            {
-                playList.Items.Refresh();
-            };
         }
 
         private async void btnOpenFileDialog_Click(object sender, RoutedEventArgs e)
