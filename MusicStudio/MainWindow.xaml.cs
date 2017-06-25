@@ -115,7 +115,16 @@ namespace MusicStudio
 
         private async void PlayList_OnDrop(object sender, DragEventArgs e)
         {
-            parseFilePathsStart((string[]) e.Data.GetData(DataFormats.FileDrop));
+            var pathfileNames = (string[]) e.Data.GetData(DataFormats.FileDrop);
+            if (pathfileNames != null)
+            {
+                pathfileNames = pathfileNames.Where(i => BassLike.SupportedAudioFileFormats.Contains(System.IO.Path.GetExtension(i))).ToArray();
+
+                if (pathfileNames.Any())
+                {
+                    parseFilePathsStart(pathfileNames);
+                }
+            }
         }
 
         private async void parseFilePathsStart(string[] pathfileNames)

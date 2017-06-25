@@ -34,6 +34,13 @@ namespace Player
 
         private static string appPath = AppDomain.CurrentDomain.BaseDirectory;
 
+        public static readonly HashSet<string> SupportedAudioFileFormats;
+
+        static BassLike()
+        {
+            SupportedAudioFileFormats = new HashSet<string>(Resources.iWillPlayExtensions.Split('|'), StringComparer.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         /// Инициализация Bass.dll
         /// </summary>
