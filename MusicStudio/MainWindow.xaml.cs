@@ -48,7 +48,7 @@ namespace MusicStudio
 
             if (openFileDialog.ShowDialog() == true)
             {
-                await Task.Run(() => parseFilePaths(openFileDialog.FileNames));
+                parseFilePathsStart(openFileDialog.FileNames);
             }
         }
 
@@ -115,20 +115,33 @@ namespace MusicStudio
 
         private async void PlayList_OnDrop(object sender, DragEventArgs e)
         {
-            await Task.Run(() => parseFilePaths((string[]) e.Data.GetData(DataFormats.FileDrop)));
+            parseFilePathsStart((string[]) e.Data.GetData(DataFormats.FileDrop));
+        }
+
+        private async void parseFilePathsStart(string[] pathfileNames)
+        {
+            progressBar.Visibility = Visibility.Visible;
+            await Task.Run(() => parseFilePaths(pathfileNames));
+            progressBar.Visibility = Visibility.Hidden;
         }
 
         private void parseFilePaths(string[] pathfileNames)
         {
-            foreach (var pathfileName in pathfileNames)
+            var length = pathfileNames.Length;
+
+            for (int p = 0; p < length; p++)
             {
+                var pathfileName = pathfileNames[p];
+
                 if (Vars.filesInfo.All(i => i.PathFileName != pathfileName))
                 {
                     var tm = new TagModel(pathfileName);
 
+                    var p1 = p + 1;
                     Application.Current.Dispatcher.Invoke(() =>
                     {
                         Vars.filesInfo.Add(tm);
+                        progressBar.Value = p1 * 100.0 / length;
                     });
                 }
             }

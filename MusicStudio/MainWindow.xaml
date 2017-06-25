@@ -5,26 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicStudio"
         mc:Ignorable="d"
-        Title="Misuc Studio" Height="446.393" Width="530" ResizeMode="CanMinimize">
+        Title="Misuc Studio" Height="473.673" Width="530" ResizeMode="CanMinimize">
     <Grid>
         <ListBox x:Name="playList" HorizontalAlignment="Left" Height="158" Margin="23,56,0,0" VerticalAlignment="Top" Width="469" MouseDoubleClick="btnPlay_Click" AllowDrop="True" Drop="PlayList_OnDrop"/>
-        <Button x:Name="btnPlay" ToolTip="Воспроизвести" HorizontalAlignment="Left" Margin="107,373,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnPlay_Click">
+        <Button x:Name="btnPlay" ToolTip="Воспроизвести" HorizontalAlignment="Left" Margin="102,384,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnPlay_Click">
             <Image Source="Images/Play.png" Height="24" Width="24"></Image>
         </Button>
-        <Button x:Name="btnPause" ToolTip="Пауза" HorizontalAlignment="Left" Margin="223,373,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnPause_Click">
+        <Button x:Name="btnPause" ToolTip="Пауза" HorizontalAlignment="Left" Margin="218,384,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnPause_Click">
             <Image Source="Images/Pause.png" Height="24" Width="24"></Image>
         </Button>
-        <Button x:Name="btnStop" ToolTip="Стоп" HorizontalAlignment="Left" Margin="331,373,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnStop_Click">
+        <Button x:Name="btnStop" ToolTip="Стоп" HorizontalAlignment="Left" Margin="326,384,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnStop_Click">
             <Image Source="Images/Stop.png" Height="24" Width="24"></Image>
         </Button>
         <Button x:Name="btnOpenFileDialog" Content="Добавить файлы" HorizontalAlignment="Left" Margin="23,20,0,0" VerticalAlignment="Top" Width="108" Click="btnOpenFileDialog_Click"/>
-        <Slider x:Name="slTime" HorizontalAlignment="Left" Margin="28,340,0,0" VerticalAlignment="Top" Width="464" Value="0" PreviewMouseUp="SlTime_OnPreviewMouseUp"/>
-        <Slider x:Name="slVol" HorizontalAlignment="Left" Margin="413,260,0,0" VerticalAlignment="Top" Width="74" Value="100" PreviewMouseUp="SlVol_OnPreviewMouseUp"/>
-        <Label x:Name="lblCurrent" Content="00:00:00" HorizontalAlignment="Left" Margin="28,308,0,0" VerticalAlignment="Top" Width="75"/>
-        <Label x:Name="lblLength" Content="00:00:00" HorizontalAlignment="Left" Margin="434,308,0,0" VerticalAlignment="Top" Width="58"/>
-        <Image x:Name="volume" HorizontalAlignment="Left" Height="24" Margin="383,254,0,0" VerticalAlignment="Top" Width="24" RenderTransformOrigin="0.167,-0.235" Source="Images/Volume.png"/>
-        <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" Height="23" Margin="23,255,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="225" TextChanged="TextBoxSearch_OnTextChanged"/>
-        <Label x:Name="lblSearch" Content="Быстрый поиск" HorizontalAlignment="Left" Margin="23,229,0,0" VerticalAlignment="Top" Width="108"/>
+        <Slider x:Name="slTime" HorizontalAlignment="Left" Margin="23,351,0,0" VerticalAlignment="Top" Width="469" Value="0" PreviewMouseUp="SlTime_OnPreviewMouseUp"/>
+        <Slider x:Name="slVol" HorizontalAlignment="Left" Margin="413,277,0,0" VerticalAlignment="Top" Width="79" Value="100" PreviewMouseUp="SlVol_OnPreviewMouseUp"/>
+        <Label x:Name="lblCurrent" Content="00:00:00" HorizontalAlignment="Left" Margin="23,319,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label x:Name="lblLength" Content="00:00:00" HorizontalAlignment="Left" Margin="429,319,0,0" VerticalAlignment="Top" Width="58"/>
+        <Image x:Name="volume" HorizontalAlignment="Left" Height="24" Margin="383,271,0,0" VerticalAlignment="Top" Width="24" RenderTransformOrigin="0.167,-0.235" Source="Images/Volume.png"/>
+        <TextBox x:Name="textBoxSearch" HorizontalAlignment="Left" Height="23" Margin="23,272,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="225" TextChanged="TextBoxSearch_OnTextChanged"/>
+        <Label x:Name="lblSearch" Content="Быстрый поиск" HorizontalAlignment="Left" Margin="23,246,0,0" VerticalAlignment="Top" Width="108"/>
+        <ProgressBar x:Name="progressBar" Visibility="Hidden" Value="0" HorizontalAlignment="Left" Height="15" Margin="23,226,0,0" VerticalAlignment="Top" Width="169"/>
 
     </Grid>
 </Window>
