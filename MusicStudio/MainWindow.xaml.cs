@@ -123,6 +123,7 @@ namespace MusicStudio
             progressBar.Visibility = Visibility.Visible;
             await Task.Run(() => parseFilePaths(pathfileNames));
             progressBar.Visibility = Visibility.Hidden;
+            progressBar.Value = 0;
         }
 
         private void parseFilePaths(string[] pathfileNames)
