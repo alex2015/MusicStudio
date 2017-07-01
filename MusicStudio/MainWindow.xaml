@@ -6,8 +6,17 @@
         xmlns:local="clr-namespace:MusicStudio"
         mc:Ignorable="d"
         Title="Misuc Studio" Height="473.673" Width="530" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <DataTemplate x:Key="listTemplate">
+            <DockPanel Margin="5">
+                <TextBlock Text="{Binding Path=DisplayText}" HorizontalAlignment="Left" Width="300"/>
+                <TextBlock Width="100"/>
+                <TextBlock Text="{Binding Path=DurationText}" HorizontalAlignment="Right" TextAlignment="Right"/>
+            </DockPanel>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
-        <ListBox x:Name="playList" HorizontalAlignment="Left" Height="158" Margin="23,56,0,0" VerticalAlignment="Top" Width="469" MouseDoubleClick="btnPlay_Click" AllowDrop="True" Drop="PlayList_OnDrop"/>
+        <ListBox x:Name="playList" ItemTemplate="{StaticResource listTemplate}" HorizontalAlignment="Left" Height="158" Margin="23,56,0,0" VerticalAlignment="Top" Width="469" MouseDoubleClick="btnPlay_Click" AllowDrop="True" Drop="PlayList_OnDrop" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
         <Button x:Name="btnPlay" ToolTip="Воспроизвести" HorizontalAlignment="Left" Margin="102,384,0,0" VerticalAlignment="Top" Width="30" Background="Transparent" BorderBrush="Transparent" Click="btnPlay_Click">
             <Image Source="Images/Play.png" Height="24" Width="24"></Image>
         </Button>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Un4seen.Bass.AddOn.Tags;
 
 namespace Player
@@ -15,6 +16,8 @@ namespace Player
         public string Album { get; set; }
         public string Title { get; set; }
         public string Year { get; set; }
+        public TimeSpan Duration { get; set; }
+        public string DurationText { get; set; }
 
         public string DisplayText { get; set; }
 
@@ -31,6 +34,10 @@ namespace Player
             PathFileName = pathFileName;
 
             TAG_INFO tagInfo = BassTags.BASS_TAG_GetFromFile(pathFileName);
+
+            Duration = TimeSpan.FromSeconds(Math.Round(tagInfo.duration));
+            DurationText = setDurationText();
+
             BitRate = tagInfo.bitrate;
             Freq = tagInfo.channelinfo.freq;
             Channels = ChannelsDict[tagInfo.channelinfo.chans];
@@ -47,6 +54,20 @@ namespace Player
         public override string ToString()
         {
             return DisplayText;
+        }
+
+        private string setDurationText()
+        {
+            var sb = new StringBuilder();
+
+            if (Duration.Hours > 0)
+            {
+                sb.Append(Duration.Hours + ":");
+            }
+
+            sb.Append(Duration.Minutes + ":" + Duration.Seconds);
+
+            return sb.ToString();
         }
     }
 }
