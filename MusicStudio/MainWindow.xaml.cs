@@ -173,5 +173,16 @@ namespace MusicStudio
         {
             playList.Items.Filter = i => ((TagModel) i).ToString().ToUpperInvariant().Contains(((TextBox) e.Source).Text.ToUpperInvariant());
         }
+
+        private void PlayList_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                var listBox = (ListBox) sender;
+                var selectIndex = listBox.SelectedIndex;
+                Vars.filesInfo.Remove((TagModel)listBox.SelectedItem);
+                listBox.SelectedIndex = Math.Min(selectIndex, Vars.filesInfo.Count - 1);
+            }
+        }
     }
 }
