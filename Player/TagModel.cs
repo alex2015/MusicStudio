@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Un4seen.Bass.AddOn.Tags;
 
@@ -18,8 +19,10 @@ namespace Player
         public string Year { get; set; }
         public TimeSpan Duration { get; set; }
         public string DurationText { get; set; }
+        public string format { get; set; }
 
-        public string DisplayText { get; set; }
+        public string TopDisplayText { get; set; }
+        public string BottomDisplayText { get; set; }
 
         private Dictionary<int, string> ChannelsDict = new Dictionary<int, string>
         {
@@ -33,27 +36,28 @@ namespace Player
         {
             PathFileName = pathFileName;
 
-            TAG_INFO tagInfo = BassTags.BASS_TAG_GetFromFile(pathFileName);
-
-            Duration = TimeSpan.FromSeconds(Math.Round(tagInfo.duration));
-            DurationText = setDurationText();
+            var tagInfo = BassTags.BASS_TAG_GetFromFile(pathFileName);
 
             BitRate = tagInfo.bitrate;
             Freq = tagInfo.channelinfo.freq;
             Channels = ChannelsDict[tagInfo.channelinfo.chans];
             Artist = tagInfo.artist;
             Album = tagInfo.album;
-
-            Title = tagInfo.title == string.Empty ? System.IO.Path.GetFileName(pathFileName) : tagInfo.title;
-
+            Title = tagInfo.title == string.Empty ? Path.GetFileName(pathFileName) : tagInfo.title;
             Year = tagInfo.year;
 
-            DisplayText = string.Format("{0} - {1}", Artist, Title);
+            Duration = TimeSpan.FromSeconds(Math.Round(tagInfo.duration));
+            DurationText = setDurationText();
+
+            format = Path.GetExtension(pathFileName).Substring(1).ToUpper();
+
+            TopDisplayText = string.Format("{0} - {1}", Artist, Title);
+            BottomDisplayText = string.Format("{0} :: {1} kHz, {2} kbps, {3} MB", format, Freq / 1000, BitRate, Math.Round(Convert.ToDouble(new FileInfo(pathFileName).Length) / 1000000, 2));
         }
 
         public override string ToString()
         {
-            return DisplayText;
+            return TopDisplayText;
         }
 
         private string setDurationText()

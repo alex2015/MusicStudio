@@ -9,7 +9,10 @@
     <Window.Resources>
         <DataTemplate x:Key="listTemplate">
             <DockPanel Margin="5">
-                <TextBlock Text="{Binding Path=DisplayText}" HorizontalAlignment="Left" Width="300"/>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding Path=TopDisplayText}" Width="300"/>
+                    <TextBlock DockPanel.Dock="Bottom" Text="{Binding Path=BottomDisplayText}" Width="300"/>
+                </DockPanel>
                 <TextBlock Width="100"/>
                 <TextBlock Text="{Binding Path=DurationText}" HorizontalAlignment="Right" TextAlignment="Right"/>
             </DockPanel>
