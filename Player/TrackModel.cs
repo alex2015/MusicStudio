@@ -6,7 +6,7 @@ using Un4seen.Bass.AddOn.Tags;
 
 namespace Player
 {
-    public class TagModel
+    public class TrackModel
     {
         public string PathFileName { get; set; }
 
@@ -32,7 +32,7 @@ namespace Player
         };
 
 
-        public TagModel(string pathFileName)
+        public TrackModel(string pathFileName)
         {
             PathFileName = pathFileName;
 

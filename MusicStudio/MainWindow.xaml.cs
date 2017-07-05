@@ -21,7 +21,7 @@ namespace MusicStudio
         public MainWindow()
         {
             InitializeComponent();
-            BassLike.InitBass();
+            BassWrapper.InitBass();
             InitTimer();
             ItemsControl();
         }
@@ -35,7 +35,7 @@ namespace MusicStudio
 
         private void ItemsControl()
         {
-            playList.ItemsSource = Vars.filesInfo;
+            playList.ItemsSource = PlayerInfo.filesInfo;
         }
 
         private async void btnOpenFileDialog_Click(object sender, RoutedEventArgs e)
@@ -57,13 +57,13 @@ namespace MusicStudio
             //player = new PlayerWrapper(playList.SelectedItem.ToString(), PlayerWrapper.UriType.Common | PlayerWrapper.UriType.LocalFile);
             //player.Play();
 
-            var selectItem = (TagModel) playList.SelectedItem;
+            var selectItem = (TrackModel) playList.SelectedItem;
 
             if (selectItem != null && !string.IsNullOrWhiteSpace(selectItem.PathFileName))
             {
-                Vars.currentTrackNumber = playList.SelectedIndex;
+                PlayerInfo.currentTrackNumber = playList.SelectedIndex;
 
-                BassLike.Play(selectItem.PathFileName);
+                BassWrapper.Play(selectItem.PathFileName);
                 setTimeSteamInfo();
 
                 timer.Start();
@@ -72,13 +72,13 @@ namespace MusicStudio
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
-            BassLike.Pause();
+            BassWrapper.Pause();
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             //player.Pause();
-            BassLike.Stop();
+            BassWrapper.Stop();
             timer.Stop();
             slTime.Value = 0;
             lblCurrent.Content = "00:00:00";
@@ -86,31 +86,31 @@ namespace MusicStudio
 
         private void Timer_Tick(object sender, EventArgs eventArgs)
         {
-            lblCurrent.Content = TimeSpan.FromSeconds(BassLike.GetPosOfStream()).ToString();
-            slTime.Value = BassLike.GetPosOfStream();
+            lblCurrent.Content = TimeSpan.FromSeconds(BassWrapper.GetPosOfStream()).ToString();
+            slTime.Value = BassWrapper.GetPosOfStream();
 
-            if (BassLike.ToNextTrack(Vars.filesInfo.Count > Vars.currentTrackNumber + 1))
+            if (BassWrapper.ToNextTrack(PlayerInfo.filesInfo.Count > PlayerInfo.currentTrackNumber + 1))
             {
-                playList.SelectedIndex = Vars.currentTrackNumber;
+                playList.SelectedIndex = PlayerInfo.currentTrackNumber;
                 setTimeSteamInfo();
             }
 
-            if (BassLike.EndPlaylist)
+            if (BassWrapper.EndPlaylist)
             {
                 btnStop_Click(this, new RoutedEventArgs());
-                playList.SelectedIndex = Vars.currentTrackNumber = 0;
-                BassLike.EndPlaylist = false;
+                playList.SelectedIndex = PlayerInfo.currentTrackNumber = 0;
+                BassWrapper.EndPlaylist = false;
             }
         }
 
         private void SlTime_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            BassLike.SetPosOfScroll(Convert.ToInt32(((Slider) e.Source).Value));
+            BassWrapper.SetPosOfScroll(Convert.ToInt32(((Slider) e.Source).Value));
         }
 
         private void SlVol_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            BassLike.SetVolumeStream(Convert.ToInt32(((Slider) e.Source).Value));
+            BassWrapper.SetVolumeStream(Convert.ToInt32(((Slider) e.Source).Value));
         }
 
         private async void PlayList_OnDrop(object sender, DragEventArgs e)
@@ -118,7 +118,7 @@ namespace MusicStudio
             var pathfileNames = (string[]) e.Data.GetData(DataFormats.FileDrop);
             if (pathfileNames != null)
             {
-                pathfileNames = pathfileNames.Where(i => BassLike.SupportedAudioFileFormats.Contains(System.IO.Path.GetExtension(i))).ToArray();
+                pathfileNames = pathfileNames.Where(i => BassWrapper.SupportedAudioFileFormats.Contains(System.IO.Path.GetExtension(i))).ToArray();
 
                 if (pathfileNames.Any())
                 {
@@ -143,14 +143,14 @@ namespace MusicStudio
             {
                 var pathfileName = pathfileNames[p];
 
-                if (Vars.filesInfo.All(i => i.PathFileName != pathfileName))
+                if (PlayerInfo.filesInfo.All(i => i.PathFileName != pathfileName))
                 {
-                    var tm = new TagModel(pathfileName);
+                    var tm = new TrackModel(pathfileName);
 
                     var p1 = p + 1;
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Vars.filesInfo.Add(tm);
+                        PlayerInfo.filesInfo.Add(tm);
                         progressBar.Value = p1 * 100.0 / length;
                     });
                 }
@@ -159,8 +159,8 @@ namespace MusicStudio
 
         private void setTimeSteamInfo()
         {
-            var currentPosStream = BassLike.GetPosOfStream();
-            var timeLengthStream = BassLike.GetTimeOfStream();
+            var currentPosStream = BassWrapper.GetPosOfStream();
+            var timeLengthStream = BassWrapper.GetTimeOfStream();
 
             lblCurrent.Content = TimeSpan.FromSeconds(currentPosStream).ToString();
             lblLength.Content = TimeSpan.FromSeconds(timeLengthStream).ToString();
@@ -171,7 +171,7 @@ namespace MusicStudio
 
         private void TextBoxSearch_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            playList.Items.Filter = i => ((TagModel) i).ToString().ToUpperInvariant().Contains(((TextBox) e.Source).Text.ToUpperInvariant());
+            playList.Items.Filter = i => ((TrackModel) i).ToString().ToUpperInvariant().Contains(((TextBox) e.Source).Text.ToUpperInvariant());
         }
 
         private void PlayList_OnKeyDown(object sender, KeyEventArgs e)
@@ -180,8 +180,8 @@ namespace MusicStudio
             {
                 var listBox = (ListBox) sender;
                 var selectIndex = listBox.SelectedIndex;
-                Vars.filesInfo.Remove((TagModel)listBox.SelectedItem);
-                listBox.SelectedIndex = Math.Min(selectIndex, Vars.filesInfo.Count - 1);
+                PlayerInfo.filesInfo.Remove((TrackModel)listBox.SelectedItem);
+                listBox.SelectedIndex = Math.Min(selectIndex, PlayerInfo.filesInfo.Count - 1);
             }
         }
     }

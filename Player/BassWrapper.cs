@@ -4,7 +4,7 @@ using Un4seen.Bass;
 
 namespace Player
 {
-    public class BassLike
+    public class BassWrapper
     {
         /// <summary>
         /// Частота дискретизации
@@ -36,7 +36,7 @@ namespace Player
 
         public static readonly HashSet<string> SupportedAudioFileFormats;
 
-        static BassLike()
+        static BassWrapper()
         {
             SupportedAudioFileFormats = new HashSet<string>(Resources.iWillPlayExtensions.Split('|'), StringComparer.OrdinalIgnoreCase);
         }
@@ -155,7 +155,7 @@ namespace Player
                 // если текущий трек не последний
                 if (notEndTrack)
                 {
-                    Play(Vars.filesInfo[++Vars.currentTrackNumber].PathFileName);
+                    Play(PlayerInfo.filesInfo[++PlayerInfo.currentTrackNumber].PathFileName);
 
                     EndPlaylist = false;
 
