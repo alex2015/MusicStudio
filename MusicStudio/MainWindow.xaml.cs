@@ -16,12 +16,14 @@ namespace MusicStudio
     public partial class MainWindow : Window
     {
         //private PlayerWrapper player;
+        private BassWrapper player;
         private DispatcherTimer timer;
 
         public MainWindow()
         {
             InitializeComponent();
-            BassWrapper.InitBass();
+            player = new BassWrapper();
+            player.InitBass();
             InitTimer();
             ItemsControl();
         }
@@ -63,7 +65,7 @@ namespace MusicStudio
             {
                 PlayerInfo.currentTrackNumber = playList.SelectedIndex;
 
-                BassWrapper.Play(selectItem.PathFileName);
+                player.Play(selectItem.PathFileName);
                 setTimeSteamInfo();
 
                 timer.Start();
@@ -72,13 +74,13 @@ namespace MusicStudio
 
         private void btnPause_Click(object sender, RoutedEventArgs e)
         {
-            BassWrapper.Pause();
+            player.Pause();
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             //player.Pause();
-            BassWrapper.Stop();
+            player.Stop();
             timer.Stop();
             slTime.Value = 0;
             lblCurrent.Content = "00:00:00";
@@ -86,31 +88,31 @@ namespace MusicStudio
 
         private void Timer_Tick(object sender, EventArgs eventArgs)
         {
-            lblCurrent.Content = TimeSpan.FromSeconds(BassWrapper.GetPosOfStream()).ToString();
-            slTime.Value = BassWrapper.GetPosOfStream();
+            lblCurrent.Content = TimeSpan.FromSeconds(player.GetPosOfStream()).ToString();
+            slTime.Value = player.GetPosOfStream();
 
-            if (BassWrapper.ToNextTrack(PlayerInfo.filesInfo.Count > PlayerInfo.currentTrackNumber + 1))
+            if (player.ToNextTrack(PlayerInfo.filesInfo.Count > PlayerInfo.currentTrackNumber + 1))
             {
                 playList.SelectedIndex = PlayerInfo.currentTrackNumber;
                 setTimeSteamInfo();
             }
 
-            if (BassWrapper.EndPlaylist)
+            if (player.EndPlaylist)
             {
                 btnStop_Click(this, new RoutedEventArgs());
                 playList.SelectedIndex = PlayerInfo.currentTrackNumber = 0;
-                BassWrapper.EndPlaylist = false;
+                player.EndPlaylist = false;
             }
         }
 
         private void SlTime_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            BassWrapper.SetPosOfScroll(Convert.ToInt32(((Slider) e.Source).Value));
+            player.SetPosOfScroll(Convert.ToInt32(((Slider) e.Source).Value));
         }
 
         private void SlVol_OnPreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            BassWrapper.SetVolumeStream(Convert.ToInt32(((Slider) e.Source).Value));
+            player.SetVolumeStream(Convert.ToInt32(((Slider) e.Source).Value));
         }
 
         private async void PlayList_OnDrop(object sender, DragEventArgs e)
@@ -118,7 +120,7 @@ namespace MusicStudio
             var pathfileNames = (string[]) e.Data.GetData(DataFormats.FileDrop);
             if (pathfileNames != null)
             {
-                pathfileNames = pathfileNames.Where(i => BassWrapper.SupportedAudioFileFormats.Contains(System.IO.Path.GetExtension(i))).ToArray();
+                pathfileNames = pathfileNames.Where(i => player.SupportedAudioFileFormats.Contains(System.IO.Path.GetExtension(i))).ToArray();
 
                 if (pathfileNames.Any())
                 {
@@ -159,8 +161,8 @@ namespace MusicStudio
 
         private void setTimeSteamInfo()
         {
-            var currentPosStream = BassWrapper.GetPosOfStream();
-            var timeLengthStream = BassWrapper.GetTimeOfStream();
+            var currentPosStream = player.GetPosOfStream();
+            var timeLengthStream = player.GetTimeOfStream();
 
             lblCurrent.Content = TimeSpan.FromSeconds(currentPosStream).ToString();
             lblLength.Content = TimeSpan.FromSeconds(timeLengthStream).ToString();
@@ -183,6 +185,12 @@ namespace MusicStudio
                 PlayerInfo.filesInfo.Remove((TrackModel)listBox.SelectedItem);
                 listBox.SelectedIndex = Math.Min(selectIndex, PlayerInfo.filesInfo.Count - 1);
             }
+        }
+
+        private void MainWindow_OnClosed(object sender, EventArgs e)
+        {
+            player.Dispose();
+            player = null;
         }
     }
 }

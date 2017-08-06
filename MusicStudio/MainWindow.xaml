@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MusicStudio"
         mc:Ignorable="d"
-        Title="Misuc Studio" Height="473.673" Width="530" ResizeMode="CanMinimize">
+        Title="Misuc Studio" Height="473.673" Width="530" ResizeMode="CanMinimize" Closed="MainWindow_OnClosed">
     <Window.Resources>
         <DataTemplate x:Key="listTemplate">
             <DockPanel Margin="5">

@@ -4,48 +4,73 @@ using Un4seen.Bass;
 
 namespace Player
 {
-    public class BassWrapper
+    public class BassWrapper : IDisposable
     {
         /// <summary>
         /// Частота дискретизации
         /// </summary>
-        private static int HZ = 44100;
+        private int HZ = 44100;
 
         /// <summary>
         /// Состояние инициализации
         /// </summary>
-        private static bool InitDefaultDevice;
+        private bool InitDefaultDevice;
 
         /// <summary>
         /// Канал
         /// </summary>
-        private static int Stream;
+        private int Stream;
 
         /// <summary>
         /// Громкость
         /// </summary>
-        private static int Volume = 100;
+        private int Volume = 100;
 
-        private static bool isStopped = true;
+        private bool isStopped = true;
 
-        public static bool EndPlaylist;
+        public bool EndPlaylist;
 
-        private static readonly List<int> BassPluginsHandles = new List<int>();
+        private readonly List<int> BassPluginsHandles = new List<int>();
 
-        private static string appPath = AppDomain.CurrentDomain.BaseDirectory;
+        private string appPath = AppDomain.CurrentDomain.BaseDirectory;
 
-        public static readonly HashSet<string> SupportedAudioFileFormats;
+        public readonly HashSet<string> SupportedAudioFileFormats;
 
-        static BassWrapper()
+        private volatile bool _disposed;
+
+        public BassWrapper()
         {
-            SupportedAudioFileFormats = new HashSet<string>(Resources.iWillPlayExtensions.Split('|'), StringComparer.OrdinalIgnoreCase);
+            SupportedAudioFileFormats = new HashSet<string>(Resources.iWillPlayExtensions.Split('|'),
+                StringComparer.OrdinalIgnoreCase);
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            DeinitializeBassStream();
+            _disposed = true;
+
+            GC.SuppressFinalize(this);
+        }
+
+        private void DeinitializeBassStream()
+        {
+            if (Stream != 0)
+            {
+                Bass.BASS_StreamFree(Stream);
+                Stream = 0;
+            }
         }
 
         /// <summary>
         /// Инициализация Bass.dll
         /// </summary>
         /// <returns></returns>
-        public static bool InitBass()
+        public bool InitBass()
         {
             if (!InitDefaultDevice)
             {
@@ -65,7 +90,7 @@ namespace Player
         /// Воспроизведение
         /// </summary>
         /// <param name="fileName"></param>
-        public static void Play(string fileName)
+        public void Play(string fileName)
         {
             if (Bass.BASS_ChannelIsActive(Stream) != BASSActive.BASS_ACTIVE_PAUSED)
             {
@@ -93,7 +118,7 @@ namespace Player
         /// <summary>
         /// Стоп
         /// </summary>
-        public static void Stop()
+        public void Stop()
         {
             Bass.BASS_ChannelStop(Stream);
             Bass.BASS_StreamFree(Stream);
@@ -103,7 +128,7 @@ namespace Player
         /// <summary>
         /// Пауза
         /// </summary>
-        public static void Pause()
+        public void Pause()
         {
             if (Bass.BASS_ChannelIsActive(Stream) == BASSActive.BASS_ACTIVE_PLAYING)
             {
@@ -115,7 +140,7 @@ namespace Player
         /// Получение длительности канала в секундах
         /// </summary>
         /// <returns></returns>
-        public static int GetTimeOfStream()
+        public int GetTimeOfStream()
         {
             long TimeBytes = Bass.BASS_ChannelGetLength(Stream);
             double Time = Bass.BASS_ChannelBytes2Seconds(Stream, TimeBytes);
@@ -126,14 +151,14 @@ namespace Player
         /// Получение текущей позиции в секундах
         /// </summary>
         /// <returns></returns>
-        public static int GetPosOfStream()
+        public int GetPosOfStream()
         {
             long pos = Bass.BASS_ChannelGetPosition(Stream);
             int posSec = (int) Bass.BASS_ChannelBytes2Seconds(Stream, pos);
             return posSec;
         }
 
-        public static void SetPosOfScroll(int pos)
+        public void SetPosOfScroll(int pos)
         {
             Bass.BASS_ChannelSetPosition(Stream, (double) pos);
         }
@@ -142,13 +167,13 @@ namespace Player
         /// Установка громкости
         /// </summary>
         /// <param name="vol"></param>
-        public static void SetVolumeStream(int vol)
+        public void SetVolumeStream(int vol)
         {
             Volume = vol;
             Bass.BASS_ChannelSetAttribute(Stream, BASSAttribute.BASS_ATTRIB_VOL, Volume / 100F);
         }
 
-        public static bool ToNextTrack(bool notEndTrack)
+        public bool ToNextTrack(bool notEndTrack)
         {
             if (Bass.BASS_ChannelIsActive(Stream) == BASSActive.BASS_ACTIVE_STOPPED && !isStopped)
             {
